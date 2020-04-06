@@ -8,13 +8,36 @@ app = Flask(__name__)
 def hello():
 	return render_template("index.template.html")
 	
-@app.route("/",methods=['POST'])
+@app.route("/process",methods=['POST'])
 def processHello():
-	return render_template('process-hello.template.html')
+    first=request.form.get('first-name')
+    last=request.form.get('last-name')
+    print(first)
+    print(last)
+    return render_template('process-hello.template.html', fn=first,ln=last)
+
+@app.route('/calculate',methods=['GET','POST'])
+def displayform():
+
+    if request.method=='GET':
+        return render_template('submitnumbers.html')
+    elif request.method=='POST':
+        first = int(request.form.get('first-number'))
+        second = int(request.form.get('second-number'))
+        sum = first + second
+        return render_template('answer.html', s=sum)
+
+#
+# @app.route('/calculate',methods=['POST'])
+# def displayanswer():
+#     first=int(request.form.get('first-number'))
+#     second=int(request.form.get('second-number'))
+#     sum=first+second
+#     return render_template('answer.html', s=sum)
 
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
-    app.run(host=os.environ.get('IP'),
-            port=int(os.environ.get('PORT')),
+    app.run(host='localhost',
+            port=8080,
             debug=True)
